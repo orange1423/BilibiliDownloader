@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.vscode/
+
+settings.json
+/aria2
+aria2c.bat
+ffmpeg.exe
