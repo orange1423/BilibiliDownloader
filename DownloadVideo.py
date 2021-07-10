@@ -14,6 +14,8 @@ def PrepareFileName(str):
 
 # 获取下载状态
 def Aria2DownloadStatus(gid):
+    if gid == 0:
+        return True
     s = ServerProxy(Settings.rpcserver)
     return s.aria2.tellStatus(gid,["status"])["status"]
 
@@ -96,7 +98,7 @@ def DownloadByList(list,sessdata,quality=-1):
             videoGid = Aria2Download(url=urlobj["videoUrl"],out=fileName + "_video.m4s",dir=folderName)
             audioGid = Aria2Download(url=urlobj["audioUrl"],out=fileName + "_audio.m4s",dir=folderName)
             if Settings.syncdownload and Settings.automerge:
-                if (Aria2DownloadStatus(videoGid) == "complete" or videoGid == 0) and (Aria2DownloadStatus(audioGid) == "complete" or audioGid == 0):
+                if Aria2DownloadStatus(videoGid) == "complete" and Aria2DownloadStatus(audioGid) == "complete":
                     Process.AutoMerge(path.join(folderName,fileName) + "_video.m4s")
             gidList.append({"code":urlobj["code"],"videoGid":videoGid,"audioGid":audioGid})
             if code == 1:
