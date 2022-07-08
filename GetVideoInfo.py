@@ -26,7 +26,7 @@ def GetPageList(aid="",bvid="",sessdata=""):
     if jsonobj2["code"] == 0 and jsonobj1["code"] == 0:
         for data in jsonobj2["data"]:
             print("GetVideoInfo:取得分P:",data["page"],"，标题为:",data["part"],"，CID:",data["cid"])
-            result = {"title":jsonobj1["data"]["title"],"subtitle":data["page"] + "." + data["part"],"aid":aid,"bvid":bvid,"cid":data["cid"]}
+            result = {"title":jsonobj1["data"]["title"],"subtitle":str(data["page"]) + "." + data["part"],"aid":aid,"bvid":bvid,"cid":data["cid"]}
             results.append(result)
         return {"code":0,"results":results}
     else :

@@ -1,6 +1,7 @@
 # 由 AID，BVID，CID 获取某一视频的下载地址
 import requests
 import json
+import Settings
 
 def GetQuality(cid,aid="",bvid="",sessdata=""):
     # 检查是否提供了AVID或BVID
@@ -53,16 +54,17 @@ def GetDownloadUrl(cid,quality=-1,aid="",bvid="",sessdata=""):
     jsonobj = json.loads(r.text)
     if jsonobj["code"] == 0:
         videoUrl = [jsonobj["data"]["dash"]["video"][0]["baseUrl"]]
-        #for i in jsonobj["data"]["dash"]["video"][0]["backupUrl"]:
-        #    videoUrl.append(i)
         audioUrl = [jsonobj["data"]["dash"]["audio"][0]["baseUrl"]]
-        #for i in jsonobj["data"]["dash"]["audio"][0]["backupUrl"]:
-        #    videoUrl.append(i)
+        if Settings.backupurl:
+            for i in jsonobj["data"]["dash"]["video"][0]["backupUrl"]:
+                videoUrl.append(i)
+            for i in jsonobj["data"]["dash"]["audio"][0]["backupUrl"]:
+                videoUrl.append(i)
         qualityNum = jsonobj["data"]["dash"]["video"][0]["id"]
         print("GetDownloadUrl:取得视频清晰度代码：",qualityNum)
         print("GetDownloadUrl:取得视频下载地址：",videoUrl)
         print("GetDownloadUrl:取得音频下载地址：",audioUrl)
-        return {"code":jsonobj["code"],"qualityNum":qualityNum,"videoUrl":videoUrl,"audioUrl":audioUrl}
+        return {"code":jsonobj["code"],"qualityNum":qualityNum,"videoUrl":videoUrl,"audioUrl":audioUrl,"jsonobj":jsonobj}
     else:
         print("GetDownloadUrl:请求：",r.url," 错误：",jsonobj["message"])
         return {"code":jsonobj["code"]}

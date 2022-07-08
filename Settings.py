@@ -10,6 +10,7 @@ if __name__ == '__main__':
     autodelete = bool(input("合并后是否删除原文件："))
     ua = input("Aria2浏览器UA：")
     quality = input("默认下载清晰度代码（自动选择最高请填-1）：")
+    backupurl = bool(input("是否使用备用地址（如果输出异常请禁用）："))
     settings = {
         "dir":dir,
         "sessdata":sessdata,
@@ -18,7 +19,8 @@ if __name__ == '__main__':
         "automerge":automerge,
         "autodelete":autodelete,
         "ua":ua,
-        "quality":quality
+        "quality":quality,
+        "backupurl":backupurl
     }
     with open("settings.json","w") as f:
         f.write(json.dumps(settings))
@@ -31,6 +33,7 @@ else:
     autodelete = True
     ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36"
     quality = -1
+    backupurl = False
     if os.path.exists("settings.json"):
         with open("settings.json","r") as f:
             jsonobj = json.loads(f.read())
@@ -42,6 +45,7 @@ else:
         autodelete = jsonobj["autodelete"]
         ua = jsonobj["ua"]
         quality = jsonobj["quality"]
+        backupurl = jsonobj["backupurl"]
     else:
         settings = {
         "dir":dir,
@@ -51,7 +55,8 @@ else:
         "automerge":automerge,
         "autodelete":autodelete,
         "ua":ua,
-        "quality":quality
+        "quality":quality,
+        "backupurl":backupurl
         }
         with open("settings.json","w") as f:
             f.write(json.dumps(settings))

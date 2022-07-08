@@ -50,9 +50,6 @@ def GetBangumiInfo(ssid="",epid="",sessdata=""):
             print("GetBangumiInfo:取得视频:",data["title"],"，标题为:",data["long_title"],"，AID:",data["aid"],"，BVID:",data["bvid"],"，CID:",data["cid"])
             result = {"title":jsonobj["result"]["title"],"subtitle":data["title"] + "." + data["long_title"],"aid":data["aid"],"bvid":data["bvid"],"cid":data["cid"]}
             results.append(result)
-        rstr = input("请输入下载范围（留空下载全部）：")
-        if len(rstr.split("-")) == 2:
-            results = results[int(rstr.split("-")[0]) - 1:int(rstr.split("-")[1])]
         return {"code":jsonobj["code"],"results":results}
     else:
         print("GetBangumiInfo:请求: ",r.url," 错误: ",jsonobj["message"])

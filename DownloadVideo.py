@@ -15,7 +15,7 @@ def PrepareFileName(str):
 # 获取下载状态
 def Aria2DownloadStatus(gid):
     if gid == 0:
-        return True
+        return "complete"
     s = ServerProxy(Settings.rpcserver)
     return s.aria2.tellStatus(gid,["status"])["status"]
 
@@ -110,29 +110,46 @@ def DownloadByList(list,sessdata,quality=-1):
     print("DownloadVideo:下载处理完成，成功：",len(gidList),"失败：",len(failList))
     return {"code":code,"gidList":gidList,"failList":failList}
 
+def DownloadRange(downloadlist):
+    rstr = input("DownloadVideo:请输入下载范围（留空下载全部）：")
+    if len(rstr.split("-")) == 2:
+        results = downloadlist[int(rstr.split("-")[0]) - 1:int(rstr.split("-")[1])]
+    else:
+        try:
+            i = int(rstr)
+            results = downloadlist[i - 1]
+        except:
+            results = downloadlist
+    return results
+
 # 通过AVID下载
 def DownloadByAVID(aid,sessdata,quality=-1):
     data = GetVideoInfo.GetPageList(aid=aid,sessdata=sessdata)
-    return DownloadByList(list=data["results"],quality=quality,sessdata=sessdata)
+    downloadlist = DownloadRange(data["results"])
+    return DownloadByList(list=downloadlist,quality=quality,sessdata=sessdata)
     
 # 通过BVID下载
 def DownloadByBVID(bvid,sessdata,quality=-1):
     data = GetVideoInfo.GetPageList(bvid=bvid,sessdata=sessdata)
-    return DownloadByList(list=data["results"],quality=quality,sessdata=sessdata)
+    downloadlist = DownloadRange(data["results"])
+    return DownloadByList(list=downloadlist,quality=quality,sessdata=sessdata)
 
 # 通过MDID下载
 def DownloadByMDID(mdid,sessdata,quality=-1):
     data = GetBangumiInfo.GetMediaInfo(mdid=mdid,sessdata=sessdata)
-    return DownloadByList(list=data["results"],quality=quality,sessdata=sessdata)
+    downloadlist = DownloadRange(data["results"])
+    return DownloadByList(list=downloadlist,quality=quality,sessdata=sessdata)
 # 通过SSID下载
 def DownloadBySSID(ssid,sessdata,quality=-1):
     data = GetBangumiInfo.GetBangumiInfo(ssid=ssid,sessdata=sessdata)
-    return DownloadByList(list=data["results"],quality=quality,sessdata=sessdata)
+    downloadlist = DownloadRange(data["results"])
+    return DownloadByList(list=downloadlist,quality=quality,sessdata=sessdata)
 
 # 通过EPID下载
 def DownloadByEPID(epid,sessdata,quality=-1):
     data = GetBangumiInfo.GetBangumiInfo(epid=epid,sessdata=sessdata)
-    return DownloadByList(list=data["results"],quality=quality,sessdata=sessdata)
+    downloadlist = DownloadRange(data["results"])
+    return DownloadByList(list=downloadlist,quality=quality,sessdata=sessdata)
 
 if __name__ == '__main__':
     if Settings.sessdata != "":
